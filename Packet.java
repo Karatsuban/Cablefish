@@ -74,7 +74,6 @@ class Packet{
 	// FONCTIONS
 
 	private void readData(){
-		this.skipBytes(
 		this.readBytesFromData(2);
 		byte[] totalLen = this.readBytesFromData(2); // 16 bits
 		this.printByteArray(totalLen);

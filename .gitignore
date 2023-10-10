@@ -1,6 +1,6 @@
 # Tcpdump cpature packets
-.pcap
-.pcapg
+*.pcap
+*.pcapg
 
 # Compiled class file
 *.class

@@ -4,7 +4,7 @@ import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 
-class Packet{
+class DataLink{
 
 	private boolean isLittleEndian;
 	private int tsf;
@@ -15,7 +15,7 @@ class Packet{
 
 	private int offset; // 'cursor' to look in the data
 
-	public Packet(boolean isLittleEndian, int tsf, int tss, int cpl, int opl, byte[] data){
+	public DataLink(boolean isLittleEndian, int tsf, int tss, int cpl, int opl, byte[] data){
 
 		this.isLittleEndian = isLittleEndian;
 		this.tsf = tsf;
@@ -45,7 +45,7 @@ class Packet{
 		this.offset += len;
 	}
 
-	private byte[] readBytesFromData(int len){
+	private byte[] readBytes(int len){
 		// read len bytes from this.data
 
 		System.out.println("here: "+this.data.length+" "+this.offset+" "+len);
@@ -74,10 +74,11 @@ class Packet{
 	// FONCTIONS
 
 	private void readData(){
-		this.readBytesFromData(2);
-		byte[] totalLen = this.readBytesFromData(2); // 16 bits
-		this.printByteArray(totalLen);
-		System.out.println("Total length = "+this.bytesToShort(totalLen));
+		byte[] sourceAddr_arr = this.readBytes(6);
+		byte[] destinationAddr_arr = this.readBytes(6);
+		System.out.println("destination address = "+this.getByteArrayRepr(sourceAddr_arr));
+		System.out.println("source address = "+this.getByteArrayRepr(destinationAddr_arr));
+		this.skipBytes(2);
 
 	}
 

@@ -15,7 +15,7 @@ class NetworkCaptureFile{
 	boolean isLittleEndian;
 	int f;
 	int BCS;
-	Packet[] packets = null;
+	DataLink[] packets = null;
 
 	public NetworkCaptureFile(String fileName){
 		this.fileName = fileName;
@@ -179,7 +179,7 @@ class NetworkCaptureFile{
 	
 				data = this.readBytesFromFile(capturedPacketLength, false); // read capturedPacketLength bytes
 
-				Packet packet = new Packet(this.isLittleEndian,
+				DataLink datalink = new DataLink(this.isLittleEndian,
 											timeStampFirst, 
 											timeStampSecond,
 											capturedPacketLength,
@@ -189,7 +189,8 @@ class NetworkCaptureFile{
 				// TODO : ne pas parser les data avec isLittleEndian !
 				// -> add an 'ignore' parameter to ignore this conversion in readBytes
 
-				System.out.println(packet);
+				System.out.println(datalink);
+
 			}else{
 				isOver = true;
 			}

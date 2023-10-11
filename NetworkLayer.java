@@ -1,0 +1,8 @@
+
+
+class NetworkLayer{
+
+	public NetworkLayer(){
+	}
+
+}

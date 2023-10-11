@@ -4,10 +4,10 @@ import java.io.*;
 public class CableFish
 {
 
-	NetworkCaptureFile ncf = null;
+	ParseCaptureFile pcf = null;
 
 	public CableFish(String fileName){
-		ncf = new NetworkCaptureFile(fileName);
+		pcf = new ParseCaptureFile(fileName);
 	}	
 
 

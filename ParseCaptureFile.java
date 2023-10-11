@@ -7,7 +7,7 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 
-class NetworkCaptureFile{
+class ParseCaptureFile{
 
 	String fileName = null;
 	File file = null;
@@ -15,9 +15,9 @@ class NetworkCaptureFile{
 	boolean isLittleEndian;
 	int f;
 	int BCS;
-	DataLink[] packets = null;
+	LinkLayer[] packets = null;
 
-	public NetworkCaptureFile(String fileName){
+	public ParseCaptureFile(String fileName){
 		this.fileName = fileName;
 		
 
@@ -166,12 +166,16 @@ class NetworkCaptureFile{
 		int capturedPacketLength, originalPacketLength;
 		byte[] data = null;
 
+		int frameNb = 1;
 
 		while (!isOver){
 
 			timeStampFirst_arr = this.readBytesFromFile(4); // read 32 bits
 
 			if (timeStampFirst_arr != null){
+
+				System.out.println("Frame "+frameNb);
+
 				timeStampFirst = this.bytesToInt(timeStampFirst_arr); // read 32 bits
 				timeStampSecond = this.bytesToInt(this.readBytesFromFile(4)); // read 32 bits
 				capturedPacketLength = this.bytesToInt(this.readBytesFromFile(4)); // read 32 bits
@@ -179,7 +183,7 @@ class NetworkCaptureFile{
 	
 				data = this.readBytesFromFile(capturedPacketLength, false); // read capturedPacketLength bytes
 
-				DataLink datalink = new DataLink(this.isLittleEndian,
+				LinkLayer link = new LinkLayer(this.isLittleEndian,
 											timeStampFirst, 
 											timeStampSecond,
 											capturedPacketLength,
@@ -189,7 +193,8 @@ class NetworkCaptureFile{
 				// TODO : ne pas parser les data avec isLittleEndian !
 				// -> add an 'ignore' parameter to ignore this conversion in readBytes
 
-				System.out.println(datalink);
+				System.out.println(link);
+				frameNb += 1;
 
 			}else{
 				isOver = true;

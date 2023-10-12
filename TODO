@@ -1,0 +1,5 @@
+-Use the ByteUtil class in the ParseCaptureFile.java to remove any duplicate functions
+-add the parameters from the user (filter, follow TCP stream, ...)
+
+-Rename LinkLayer to Frame ?
+-Add an endianness value in ByteUtil?

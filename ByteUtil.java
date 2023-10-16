@@ -24,7 +24,7 @@ final class ByteUtil
         // takes 4 bytes, convert them to int
 		
 		int out = 0;
-		/*byte[] temp = null;
+		byte[] temp = null;
 		switch (this.data.length){
 			case 1:
 				temp = new byte[]{0x0, 0x0, 0x0, this.data[0]};
@@ -40,9 +40,10 @@ final class ByteUtil
 				break;
 			default:
 		};
+		System.out.println("temp.len = "+temp.length);
 		System.out.println(new ByteUtil(temp));
-		*/
-        out = ByteBuffer.wrap(this.data).getInt();
+		
+        out = ByteBuffer.wrap(temp).getInt();
 		return out;
     }
 
@@ -129,5 +130,13 @@ final class ByteUtil
 		return out;
 	}
 	
+
+	// Helper functions
+
+	private byte[] padToLength(Byteutil b, int length){
+		
+		String[] both = Arrays.copyOf(first, first.length + second.length);
+		System.arraycopy(second, 0, both, first.length, second.length);
+	}
 
 }

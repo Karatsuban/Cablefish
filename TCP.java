@@ -68,8 +68,8 @@ class TCP extends Protocol{
 		String out = "";
 		out += this.protocolName+"\n";
 		
-		out += "Source port: "+this.sourcePort.toShort()+"\n";
-		out += "Destination port: "+this.destinationPort.toShort()+"\n";
+		out += "Source port: "+this.sourcePort.toInt()+"\n";
+		out += "Destination port: "+this.destinationPort.toInt()+"\n";
 		out += "\n";
 		return out;
 	}

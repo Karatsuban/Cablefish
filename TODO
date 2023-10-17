@@ -4,10 +4,9 @@ TODO
 -add the parameters from the user (filter, follow TCP stream, ...)
 -Make a package
 -Separate the protocols from the other files (in another folder)
--modify the toInt() and toShort() methods of ByteUtil to account for the signed-ness of the
-	data types in Java !
--add a toLong() method in ByteUtil
 -modify the methods in ByteUtil to operate on the current value at the offset
+-add a toMacAddress() method to the ByteUtil class to return 6 bytes of data arranger to a MAC addresse string 
+-get rid of the padding (if any) at any layer that specifies it
 
 
 MAYBE ?
@@ -19,4 +18,7 @@ MAYBE ?
 
 
 DONE
--Add a 'toIPV4Address()' method to the ByteUtil class to return 4 bytes of data arranged to a IPv4 address
+-Add a 'toIPV4Address()' method to the ByteUtil class to return 4 bytes of data arranged to a IPv4 address (string)
+-modify the toInt() and toShort() methods of ByteUtil to account for the signed-ness of the
+	data types in Java !
+-add a toLong() method in ByteUtil

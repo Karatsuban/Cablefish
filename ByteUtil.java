@@ -8,10 +8,12 @@ final class ByteUtil
 
 	public byte[] data = null;
 	public int offset;
+	public int length;
 
 	public ByteUtil(byte[] data){
 		this.data = data;
 		this.offset = 0;
+		this.length = this.data.length;
 	}
 
 	public ByteUtil(byte data){
@@ -19,37 +21,37 @@ final class ByteUtil
 	}
 
 	// Conversion methods
-	
+
+	public long toLong(){
+		// takes 8 bytes, convert them to long
+		long out = 0;
+		if (this.length < 8)
+			out = ByteBuffer.wrap(this.padToLength(8)).getLong();
+		else
+			out = ByteBuffer.wrap(this.data).getLong();
+		return out;
+	}
+
+
     public int toInt(){
         // takes 4 bytes, convert them to int
 		
 		int out = 0;
-		byte[] temp = null;
-		switch (this.data.length){
-			case 1:
-				temp = new byte[]{0x0, 0x0, 0x0, this.data[0]};
-				break;
-			case 2:
-				temp = new byte[]{0x0, 0x0, this.data[0], this.data[1]};
-				break;
-			case 3:
-				temp = new byte[]{0x0, this.data[0], this.data[1], this.data[2]};
-				break;
-			case 4:
-				temp = this.data;
-				break;
-			default:
-		};
-		System.out.println("temp.len = "+temp.length);
-		System.out.println(new ByteUtil(temp));
-		
-        out = ByteBuffer.wrap(temp).getInt();
+		if (this.length < 4)
+			out = ByteBuffer.wrap(this.padToLength(4)).getInt();
+		else
+	        out = ByteBuffer.wrap(this.data).getInt();
 		return out;
     }
 
     public short toShort(){
         // takes 2 bytes, converts them to short
-        return ByteBuffer.wrap(this.data).getShort();
+		short out = 0;
+		if (this.length < 2)
+			out = ByteBuffer.wrap(this.padToLength(2)).getShort();
+        else
+			out = ByteBuffer.wrap(this.data).getShort();
+		return out;
     }
 
 	public byte toByte(){
@@ -100,11 +102,13 @@ final class ByteUtil
 
 	public int getBit(int n){
 		// return the nth bit from the first byte currently being read
+		int out = 0;
 		if (n>=8 || n < 0){
-			return -1;
+			out = -1;
 		}else{
-			return (this.data[this.offset] >> n) & 1;
+			out = (this.data[this.offset] >> n) & 1;
 		}
+		return out;
 	}
 
 	// ToString method
@@ -133,10 +137,19 @@ final class ByteUtil
 
 	// Helper functions
 
-	private byte[] padToLength(Byteutil b, int length){
-		
-		String[] both = Arrays.copyOf(first, first.length + second.length);
-		System.arraycopy(second, 0, both, first.length, second.length);
+	private byte[] padToLength(int length){
+		// pad this.data up to lenght by putting 0 bytes BEFORE this.data
+		if (this.length >= length)
+			return this.data; // already long enough
+
+		int pad_length = length-this.length;
+		byte[] paddArr = new byte[pad_length];
+		Arrays.fill(paddArr, (byte) 0);
+
+		byte[] both = Arrays.copyOf(paddArr, paddArr.length + this.length);
+		System.arraycopy(this.data, 0, both, paddArr.length, this.length);
+
+		return both;
 	}
 
 }

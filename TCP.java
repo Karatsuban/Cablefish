@@ -35,13 +35,10 @@ class TCP extends Protocol{
 		this.destinationPort = this.data.readBytes(2);
 		this.sequenceNumber = this.data.readBytes(4);
 		this.ackNumber = this.data.readBytes(4);
-		System.out.println("Seq number ="+this.sequenceNumber.toInt());
 		byte temp = this.data.readBytes(1).getData()[0];
 		this.dataOffset = (temp >> 4) & 0x0F; // shift the 4 highest bits 4x to the right and get an int
 		this.dataOffset *= 4; // get the offset in BYTES
-		System.out.println("Offset = "+this.dataOffset);
 		this.flags = this.data.readBytes(1);
-		temp = flags.getData()[0];
 		cwr = this.flags.getBit(7) == 1;
 		ece = this.flags.getBit(6) == 1;
 		urg = this.flags.getBit(5) == 1;
@@ -58,9 +55,23 @@ class TCP extends Protocol{
 			this.options = this.data.readBytes(this.dataOffset-20);
 		}
 
-		ByteUtil data = this.data.getRemainingBytes();
+		ByteUtil payload = this.data.getRemainingBytes();
+
+		if (payload != null)
+			System.out.println("There is a payload of size "+payload.length);
 
 
+	}
+
+	private String getFlagsRepr(){
+		String[] flags = {"FIN", "SYN", "RST", "PSH", "ACK", "URG", "ECE", "CWR"};
+		String out = "(";
+		for (int i=7; i>=0; i--){
+			if (this.flags.getBit(i) == 1)
+				out += flags[i]+" ";
+		}
+		out += ")";
+		return out;
 	}
 
 
@@ -68,8 +79,12 @@ class TCP extends Protocol{
 		String out = "";
 		out += this.protocolName+"\n";
 		
-		out += "Source port: "+this.sourcePort.toInt()+"\n";
-		out += "Destination port: "+this.destinationPort.toInt()+"\n";
+		out += "Source port: "+this.sourcePort.toLong()+"\n";
+		out += "Destination port: "+this.destinationPort.toLong()+"\n";
+		out += "Sequence number: "+this.sequenceNumber.toLong()+"\n";
+		out += "Ack number: "+this.ackNumber.toLong()+"\n";
+		out += "Flags: "+this.flags+" "+this.getFlagsRepr()+"\n";
+		out += "Window: "+this.windowSize.toLong()+"\n";
 		out += "\n";
 		return out;
 	}

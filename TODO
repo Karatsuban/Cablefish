@@ -5,8 +5,8 @@ TODO
 -Make a package
 -Separate the protocols from the other files (in another folder)
 -modify the methods in ByteUtil to operate on the current value at the offset
--add a toMacAddress() method to the ByteUtil class to return 6 bytes of data arranger to a MAC addresse string 
 -get rid of the padding (if any) at any layer that specifies it
+-For the protocol class and any class that extends it, introduce a function printing the content of its data with a padding (for a better ~visual experience~), keep the ToString but add another method
 
 
 MAYBE ?
@@ -22,3 +22,4 @@ DONE
 -modify the toInt() and toShort() methods of ByteUtil to account for the signed-ness of the
 	data types in Java !
 -add a toLong() method in ByteUtil
+-add a toMacAddress() method to the ByteUtil class to return 6 bytes of data arranger to a MAC addresse string 

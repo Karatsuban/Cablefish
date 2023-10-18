@@ -134,6 +134,18 @@ final class ByteUtil
 		return out;
 	}
 	
+	public String asMacAddr(){
+		String out = "";
+		if (this.data.length < 6){
+			out += " ";
+		}else{
+			for (int i=0; i<6; i++){
+				out += String.format("%02x", this.data[i]);
+				if (i!=5) out += ":";
+			}
+		}
+		return out;
+	}
 
 	// Helper functions
 

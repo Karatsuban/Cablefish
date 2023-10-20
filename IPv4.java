@@ -70,7 +70,7 @@ class IPv4 extends Protocol{
 		out += this.protocolName+"\n";
 		out += "Internet Header Lenghth : "+this.IHL+"\n";
 		out += "Flags: "+this.flags+"\n";
-		out += "TTL: "+this.ttl.toByte()+"\n";
+		out += "TTL: "+this.ttl.toShort()+"\n";
 		out += "Protocol: "+this.protocol+"\n";
 		out += "source IP address: "+this.sourceIPAddr.asIPv4Addr()+"\n";
 		out += "Destination IP address: "+this.destinationIPAddr.asIPv4Addr()+"\n";

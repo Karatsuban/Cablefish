@@ -10,7 +10,7 @@ class UDP extends Protocol{
 
 
 	private void parseData(){
-		System.out.println("Parsing...");
+		System.out.println("Parsing UDP...");
 	}
 
 

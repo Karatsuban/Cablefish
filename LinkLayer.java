@@ -8,6 +8,10 @@ import java.util.HexFormat;
 
 class LinkLayer extends Protocol{
 
+	ByteUtil sourceAddr = null;
+	ByteUtil destinationAddr = null;
+	ByteUtil etherType = null;
+
 	private boolean isLittleEndian;
 	private int tsf;
 	private int tss;
@@ -35,14 +39,11 @@ class LinkLayer extends Protocol{
 	// FUNCTIONS
 
 	private void readData(){
-		ByteUtil sourceAddr_arr = this.data.readBytes(6);
-		ByteUtil destinationAddr_arr = this.data.readBytes(6);
-		ByteUtil etherType = this.data.readBytes(2);
-		ByteUtil data = this.data.getRemainingBytes();
+		sourceAddr = this.data.readBytes(6);
+		destinationAddr = this.data.readBytes(6);
+		etherType = this.data.readBytes(2);
+		data = this.data.getRemainingBytes();
 
-		System.out.println("destination address = "+sourceAddr_arr);
-		System.out.println("source address = "+destinationAddr_arr);
-		System.out.println("etherType = "+etherType.toShort());
 
 		if (etherType.equals("0800")){
 				this.setEncapsulated(new IPv4(data));
@@ -66,6 +67,10 @@ class LinkLayer extends Protocol{
 		SimpleDateFormat sdf = new SimpleDateFormat("EEEE,MMMM d,yyyy h:mm,a");
 		String formattedDate = sdf.format(date);
 
+
+		out += "destination address: "+this.sourceAddr.asMacAddr()+"\n";
+		out += "source address: "+this.destinationAddr.asMacAddr()+"\n";
+		out += "etherType: "+this.etherType.toInt()+"\n";
 		out += "Packet sent at date: "+formattedDate.toString()+"\n";
 		out += "Current Packet length: "+this.cpl+"\n";
 		out += "Original Packet length: "+this.opl+"\n";

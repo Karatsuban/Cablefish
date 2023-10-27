@@ -60,6 +60,7 @@ class LinkLayer extends Protocol{
 
 	}
 
+
 	public String toString(){
 		String out = "";
 
@@ -67,16 +68,15 @@ class LinkLayer extends Protocol{
 		SimpleDateFormat sdf = new SimpleDateFormat("EEEE,MMMM d,yyyy h:mm,a");
 		String formattedDate = sdf.format(date);
 
+		out += this.gs()+"destination address: "+this.sourceAddr.asMacAddr()+"\n";
+		out += this.gs()+"source address: "+this.destinationAddr.asMacAddr()+"\n";
+		out += this.gs()+"etherType: "+this.etherType.toInt()+"\n";
+		out += this.gs()+"Packet sent at date: "+formattedDate.toString()+"\n";
+		out += this.gs()+"Current Packet length: "+this.cpl+"\n";
+		out += this.gs()+"Original Packet length: "+this.opl+"\n";
 
-		out += "destination address: "+this.sourceAddr.asMacAddr()+"\n";
-		out += "source address: "+this.destinationAddr.asMacAddr()+"\n";
-		out += "etherType: "+this.etherType.toInt()+"\n";
-		out += "Packet sent at date: "+formattedDate.toString()+"\n";
-		out += "Current Packet length: "+this.cpl+"\n";
-		out += "Original Packet length: "+this.opl+"\n";
-
-		out += "Encapsulated protocol:\n";
-		out += this.encapsulated.toString();
+		out += this.gs()+"Encapsulated protocol:\n";
+		out += this.encapsulated.toString(this.indent+1);
 		out += "\n";
 
 		return out;

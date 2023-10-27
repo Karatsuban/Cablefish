@@ -52,9 +52,9 @@ class ICMP extends Protocol{
 
 	public String toString(){
 		String out = "";
-		out += this.protocolName+"\n";
+		out += this.gs()+this.protocolName+"\n";
 		//out += "data: "+this.data;
-		out += "Type: "+this.type+"("+this.getControlMessage()+")\n";
+		out += this.gs()+"Type: "+this.type+"("+this.getControlMessage()+")\n";
 
 		out += "\n";
 		return out;

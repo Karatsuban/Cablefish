@@ -67,17 +67,17 @@ class IPv4 extends Protocol{
 
 	public String toString(){
 		String out = "";
-		out += this.protocolName+"\n";
-		out += "Internet Header Lenghth : "+this.IHL+"\n";
-		out += "Flags: "+this.flags+"\n";
-		out += "TTL: "+this.ttl.toShort()+"\n";
-		out += "Protocol: "+this.protocol+"\n";
-		out += "source IP address: "+this.sourceIPAddr.asIPv4Addr()+"\n";
-		out += "Destination IP address: "+this.destinationIPAddr.asIPv4Addr()+"\n";
+		out += this.gs()+this.protocolName+"\n";
+		out += this.gs()+"Internet Header Lenghth : "+this.IHL+"\n";
+		out += this.gs()+"Flags: "+this.flags+"\n";
+		out += this.gs()+"TTL: "+this.ttl.toShort()+"\n";
+		out += this.gs()+"Protocol: "+this.protocol+"\n";
+		out += this.gs()+"source IP address: "+this.sourceIPAddr.asIPv4Addr()+"\n";
+		out += this.gs()+"Destination IP address: "+this.destinationIPAddr.asIPv4Addr()+"\n";
 
 		if (this.encapsulated != null){
-			out += "Encapsulated protocol:\n";
-			out += this.encapsulated.toString();
+			out += this.gs()+"Encapsulated protocol:\n";
+			out += this.encapsulated.toString(this.indent+1);
 		}
 
 		out += "\n";

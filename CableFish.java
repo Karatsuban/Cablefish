@@ -4,10 +4,15 @@ import java.io.*;
 public class CableFish
 {
 
-	ParseCaptureFile pcf = null;
+	//ParseCaptureFile pcf = null;
+	ParsePcapFile_test pcf = null;
 
 	public CableFish(String fileName){
-		pcf = new ParseCaptureFile(fileName);
+		//pcf = new ParseCaptureFile(fileName);
+
+		pcf = new ParsePcapFile_test(fileName);
+
+		this.launchUI();
 	}	
 
 
@@ -15,6 +20,13 @@ public class CableFish
 		boolean isOver = false;
 
 		System.out.println("Welcome to CableFish UI !");
+
+		/*
+		Options: 
+			filter <protocol 1 name> ... <protocol x name> => display only those x protocoles
+			follow-tcp-stream
+		*/
+
 
 		while (!isOver){
 
@@ -35,7 +47,6 @@ public class CableFish
 
 		CableFish cf = new CableFish(args[0]);
 
-		cf.launchUI();
 
 	}
 }

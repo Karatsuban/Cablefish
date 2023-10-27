@@ -16,8 +16,8 @@ class UDP extends Protocol{
 
 	public String toString(){
 		String out = "";
-		out += this.protocolName+"\n";
-		out += "data: "+this.data;
+		out += this.gs()+this.protocolName+"\n";
+		out += this.gs()+"data: "+this.data;
 		out += "\n";
 		return out;
 	}

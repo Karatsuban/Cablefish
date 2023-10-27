@@ -43,18 +43,18 @@ class ARP extends Protocol{
 
     public String toString(){
         String out = "";
-        out += this.protocolName+"\n";
-		out += "Hardware address length: "+this.hardwareAddressLength+"\n";
-		out += "Protocol address length: "+this.protocolAddressLength+"\n";
-		out += "Operation: "+this.operation;
+        out += this.gs()+this.protocolName+"\n";
+		out += this.gs()+"Hardware address length: "+this.hardwareAddressLength+"\n";
+		out += this.gs()+"Protocol address length: "+this.protocolAddressLength+"\n";
+		out += this.gs()+"Operation: "+this.operation;
 		if (this.operation == 1)
 			out += " (request)\n";
 		else
 			out += " (reply)\n";
-		out += "Sender hardware address: "+this.senderHardwareAddress.asMacAddr()+"\n";
-		out += "Sender protocol address: "+this.senderProtocolAddress.asIPv4Addr()+"\n"; // HERE TODO : does this protocol address chages according to the protocol ? isn't IPv4 the only protocol used for this ?
-		out += "Target hardware address: "+this.targetHardwareAddress.asMacAddr()+"\n";
-		out += "Target protocol address: "+this.targetProtocolAddress.asIPv4Addr()+"\n";
+		out += this.gs()+"Sender hardware address: "+this.senderHardwareAddress.asMacAddr()+"\n";
+		out += this.gs()+"Sender protocol address: "+this.senderProtocolAddress.asIPv4Addr()+"\n"; // HERE TODO : does this protocol address chages according to the protocol ? isn't IPv4 the only protocol used for this ?
+		out += this.gs()+"Target hardware address: "+this.targetHardwareAddress.asMacAddr()+"\n";
+		out += this.gs()+"Target protocol address: "+this.targetProtocolAddress.asIPv4Addr()+"\n";
 		out += "\n";
         return out;
     }

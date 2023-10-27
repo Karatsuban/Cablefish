@@ -77,14 +77,14 @@ class TCP extends Protocol{
 
 	public String toString(){
 		String out = "";
-		out += this.protocolName+"\n";
+		out += this.gs()+this.protocolName+"\n";
 		
-		out += "Source port: "+this.sourcePort.toLong()+"\n";
-		out += "Destination port: "+this.destinationPort.toLong()+"\n";
-		out += "Sequence number: "+this.sequenceNumber.toLong()+"\n";
-		out += "Ack number: "+this.ackNumber.toLong()+"\n";
-		out += "Flags: "+this.flags+" "+this.getFlagsRepr()+"\n";
-		out += "Window: "+this.windowSize.toLong()+"\n";
+		out += this.gs()+"Source port: "+this.sourcePort.toLong()+"\n";
+		out += this.gs()+"Destination port: "+this.destinationPort.toLong()+"\n";
+		out += this.gs()+"Sequence number: "+this.sequenceNumber.toLong()+"\n";
+		out += this.gs()+"Ack number: "+this.ackNumber.toLong()+"\n";
+		out += this.gs()+"Flags: "+this.flags+" "+this.getFlagsRepr()+"\n";
+		out += this.gs()+"Window: "+this.windowSize.toLong()+"\n";
 		out += "\n";
 		return out;
 	}

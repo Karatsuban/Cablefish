@@ -7,7 +7,7 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 
 
-class ParseCaptureFile{
+class ParsePcapFile_test{
 
 	String fileName = null;
 	File file = null;
@@ -17,7 +17,7 @@ class ParseCaptureFile{
 	int BCS;
 	LinkLayer[] packets = null;
 
-	public ParseCaptureFile(String fileName){
+	public ParsePcapFile_test(String fileName){
 		this.fileName = fileName;
 		
 
@@ -33,15 +33,16 @@ class ParseCaptureFile{
 
 	private void encodingType(){
 		ByteUtil magicNumber = null;
+		byte[] temp = new byte[4];
+		int read;
 
 		try{
-			magicNumber = new ByteUtil(this.fis.read(magicNumber, 0, 4));
+			read = this.fis.read(temp, 0, 4);
+			magicNumber = new ByteUtil(temp);
 		}catch (IOException e){
 			System.out.printf(e.getMessage());
 		}
 
-		
-		byte[] ref = HexFormat.of().parseHex("D4C3B2A1");
 
 		if (magicNumber.equals("D4C3B2A1")){
 			this.isLittleEndian = false;
@@ -187,7 +188,7 @@ class ParseCaptureFile{
 				// TODO : ne pas parser les data avec isLittleEndian !
 				// -> add an 'ignore' parameter to ignore this conversion in readBytes
 
-				System.out.println(link);
+				System.out.println(link.toString(0));
 				frameNb += 1;
 
 			}else{

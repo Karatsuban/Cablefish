@@ -1,7 +1,7 @@
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.HexFormat;
-
+import java.nio.charset.StandardCharsets;
 
 final class ByteUtil
 {
@@ -87,6 +87,12 @@ final class ByteUtil
         return new ByteUtil(b);
     }
 
+	public ByteUtil getBytes(int len){
+		// returns len bytes from this.data WITHOUT moving the offset
+        byte[] b = Arrays.copyOfRange(this.data, this.offset, this.offset+len);
+		return new ByteUtil(b);
+	}
+
     public ByteUtil getRemainingBytes(){
         // read the remaining bytes from this.data
         byte[] b = Arrays.copyOfRange(this.data, this.offset, this.data.length);
@@ -111,6 +117,10 @@ final class ByteUtil
 		return out;
 	}
 
+	public int length(){
+		return this.length;
+	}
+
 	// ToString method
 
 	public String toString(){
@@ -119,6 +129,10 @@ final class ByteUtil
             out += String.format("%02x ", this.data[i]);
         }
         return out;
+	}
+
+	public String toAlphaNum(){
+		return new String(this.data);
 	}
 
 	public String asIPv4Addr(){

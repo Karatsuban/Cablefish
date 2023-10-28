@@ -72,6 +72,19 @@ final class ByteUtil
         return Arrays.equals(this.data, b);
     }
 
+	public boolean isZeroes(){
+		// returns whether the bytes are equal to zero
+		boolean out = true;
+		int index = 0;
+		while (index < this.length && out)
+		{
+			if (this.data[index] != 0)
+				out = false;
+			index += 1;
+		}
+		return out;
+	}
+
 
 	// Reading methods
 

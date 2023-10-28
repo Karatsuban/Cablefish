@@ -1,12 +1,12 @@
 TODO
 
 -Use the ByteUtil class in the ParseCaptureFile.java to remove any duplicate functions
--add the parameters from the user (filter, follow TCP stream, ...)
+-add the parameters from the user (follow TCP stream, ...)
 -Make a package
 -Separate the protocols from the other files (in another folder)
 -modify the methods in ByteUtil to operate on the current value at the offset
 -get rid of the padding (if any) at any layer that specifies it
--For the protocol class and any class that extends it, introduce a function printing the content of its data with a padding (for a better ~visual experience~), keep the ToString but add another method
+
 
 
 MAYBE ?
@@ -23,3 +23,9 @@ DONE
 	data types in Java !
 -add a toLong() method in ByteUtil
 -add a toMacAddress() method to the ByteUtil class to return 6 bytes of data arranger to a MAC addresse string 
+-For the Protocol class and any class that extends it, introduce a function printing 
+	the content of its data with a padding (for a better ~visual experience~), 
+	keep the ToString but add another method
+-Create a ProtocolName enum class to keep track of all the protocols
+-Add the parameter 'frame' to keep only one frame
+-Add the parameter 'filter' to keep only one protocol

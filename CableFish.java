@@ -6,35 +6,69 @@ public class CableFish
 
 	//ParseCaptureFile pcf = null;
 	ParsePcapFile_test pcf = null;
+	String[] args = null;
 
-	public CableFish(String fileName){
+	private int frame;
+	private ProtocolName filter;
+
+	public CableFish(String[] args){
 		//pcf = new ParseCaptureFile(fileName);
 
-		pcf = new ParsePcapFile_test(fileName);
+		this.args = args;
 
-		this.launchUI();
+		pcf = new ParsePcapFile_test(this.args[0]);
+
+		this.parseArgs();
 	}	
 
 
-	public void launchUI(){
-		boolean isOver = false;
-
-		System.out.println("Welcome to CableFish UI !");
+	public void parseArgs(){
 
 		/*
 		Options: 
 			filter <protocol 1 name> ... <protocol x name> => display only those x protocoles
 			follow-tcp-stream
+			trame <nb> : display only this trame
 		*/
+		int argIndex = 1;
 
+		this.frame = -1;
+		this.filter = ProtocolName.ALL;
 
-		while (!isOver){
+		while (argIndex < this.args.length)
+		{
+			switch (this.args[argIndex])
+			{
+				case "frame":
+					this.frame = Integer.valueOf(this.args[argIndex+1]);
+					argIndex += 2;
+					break;
+				case "filter":
+					String temp =this.args[argIndex+1];
+					if (ProtocolName.isName(temp)){
+						this.filter = ProtocolName.getFromString(temp);
+					}else{
+						System.out.println("Protocol name not recognized: "+temp);
+					}
+					argIndex += 2;
+					break;
+				default:
+					argIndex += 1;
 
-			// scan the content of System.in to parse commands
-
-			isOver = true;
+			}
 		}
 
+		if (this.frame < 0)
+			System.out.println("Get all frames");
+		else
+			System.out.println("Get frame "+this.frame);
+
+		if (this.filter != null)
+			System.out.println("Getting protocol "+this.filter.getName());
+
+
+		String out = this.pcf.toString(this.frame, this.filter);
+		System.out.println(out);
 	}
 
 
@@ -45,7 +79,7 @@ public class CableFish
 			System.exit(1);
 		}
 
-		CableFish cf = new CableFish(args[0]);
+		CableFish cf = new CableFish(args);
 
 
 	}

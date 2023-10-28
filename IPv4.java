@@ -3,17 +3,19 @@
 class IPv4 extends Protocol{
 
 
-	int IHL;
-	ByteUtil totalLength = null;
-	ByteUtil identification =null;
-	int flags;
-	int fragmentOffset;
-	ByteUtil ttl = null;
-	ByteUtil protocol = null;
-	ByteUtil headerChecksum = null;
-	ByteUtil sourceIPAddr = null;
-	ByteUtil destinationIPAddr = null;
-	ByteUtil options = null;
+	private int IHL;
+	private ByteUtil totalLength = null;
+	private ByteUtil identification =null;
+	private ByteUtil fragmentOffset;
+	private boolean dontFragment;
+	private boolean moreFragments;
+	private ByteUtil ttl = null;
+	private ByteUtil protocol = null;
+	private ByteUtil headerChecksum = null;
+	private ByteUtil sourceIPAddr = null;
+	private ByteUtil destinationIPAddr = null;
+	private ByteUtil options = null;
+
 
 	public IPv4(byte[] data){
 		super("IPv4", data);
@@ -35,9 +37,10 @@ class IPv4 extends Protocol{
 		ByteUtil DSCP = this.data.readBytes(1);
 		ByteUtil totalLength = this.data.readBytes(2); // total packet length (header+data)
 		ByteUtil identification = this.data.readBytes(2);
-		byte[] flagsFragmentOffset = this.data.readBytes(2).getData(); // Flags + fragment offset
-		int flags = flagsFragmentOffset[0] & 0xe;
-		// TODO  : do something about fragment offset !
+		ByteUtil flagsFragmentOffset = this.data.readBytes(2); // Flags + fragment offset
+		this.dontFragment = flagsFragmentOffset.getBit(6) == 1;
+		this.moreFragments = flagsFragmentOffset.getBit(5) == 1;
+		this.fragmentOffset = null; // TODO : calculate it properly !
 		this.ttl = this.data.readBytes(1);
 		this.protocol = this.data.readBytes(1);
 		this.headerChecksum = this.data.readBytes(2);
@@ -69,11 +72,16 @@ class IPv4 extends Protocol{
 		String out = "";
 		out += this.gs()+this.protocolName+"\n";
 		out += this.gs()+"Internet Header Lenghth : "+this.IHL+"\n";
-		out += this.gs()+"Flags: "+this.flags+"\n";
+		out += this.gs()+"Flags: ";
+		if (this.dontFragment)
+			out += "Don't fragment\n";
+		if (this.moreFragments)
+			out += "More fragments\n";
 		out += this.gs()+"TTL: "+this.ttl.toShort()+"\n";
 		out += this.gs()+"Protocol: "+this.protocol+"\n";
-		out += this.gs()+"source IP address: "+this.sourceIPAddr.asIPv4Addr()+"\n";
+		out += this.gs()+"Source IP address: "+this.sourceIPAddr.asIPv4Addr()+"\n";
 		out += this.gs()+"Destination IP address: "+this.destinationIPAddr.asIPv4Addr()+"\n";
+
 
 		if (this.encapsulated != null){
 			out += this.gs()+"Encapsulated protocol:\n";

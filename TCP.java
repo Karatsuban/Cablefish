@@ -2,8 +2,8 @@
 
 class TCP extends Protocol{
 
-	ByteUtil sourcePort = null;
-	ByteUtil destinationPort = null;
+	int sourcePort;
+	int destinationPort;
 	ByteUtil sequenceNumber = null;
 	ByteUtil ackNumber = null;
 	int dataOffset;
@@ -20,7 +20,7 @@ class TCP extends Protocol{
 	ByteUtil checksum = null;
 	ByteUtil urgentPointer = null;
 	ByteUtil options = null;
-
+	ByteUtil payload = null;
 
 
 	public TCP(ByteUtil data){
@@ -31,8 +31,8 @@ class TCP extends Protocol{
 
 
 	private void parseData(){
-		this.sourcePort = this.data.readBytes(2);
-		this.destinationPort = this.data.readBytes(2);
+		this.sourcePort = this.data.readBytes(2).toInt();
+		this.destinationPort = this.data.readBytes(2).toInt();
 		this.sequenceNumber = this.data.readBytes(4);
 		this.ackNumber = this.data.readBytes(4);
 		byte temp = this.data.readBytes(1).getData()[0];
@@ -55,11 +55,20 @@ class TCP extends Protocol{
 			this.options = this.data.readBytes(this.dataOffset-20);
 		}
 
-		ByteUtil payload = this.data.getRemainingBytes();
 
-		if (payload != null)
-			System.out.println("There is a payload of size "+payload.length);
+		this.payload = this.data.getRemainingBytes();
 
+
+		if (this.destinationPort == 80 || this.destinationPort == 473 ||
+			this.sourcePort == 80 || this.sourcePort == 473)
+		{
+			if (this.payload.length != 0)
+			{
+				if (!this.payload.isZeroes()){
+					this.setEncapsulated(new HTTPv1_1(this.payload));
+				}
+			}
+		}
 
 	}
 
@@ -79,12 +88,32 @@ class TCP extends Protocol{
 		String out = "";
 		out += this.gs()+this.protocolName+"\n";
 		
-		out += this.gs()+"Source port: "+this.sourcePort.toLong()+"\n";
-		out += this.gs()+"Destination port: "+this.destinationPort.toLong()+"\n";
+		out += this.gs()+"Source port: "+this.sourcePort+"\n";
+		out += this.gs()+"Destination port: "+this.destinationPort+"\n";
 		out += this.gs()+"Sequence number: "+this.sequenceNumber.toLong()+"\n";
 		out += this.gs()+"Ack number: "+this.ackNumber.toLong()+"\n";
+		out += this.gs()+"Data offset: "+this.dataOffset+"\n";
 		out += this.gs()+"Flags: "+this.flags+" "+this.getFlagsRepr()+"\n";
 		out += this.gs()+"Window: "+this.windowSize.toLong()+"\n";
+
+		if (this.options != null)
+		{
+			if (this.options.length != 0)
+				out += this.gs()+"There are options: "+this.options+"\n";
+		}
+
+		out += this.gs()+"PAYLOAD SIZE: "+this.payload.length+"\n";
+
+		if (this.encapsulated != null)
+		{
+			out += this.gs()+"Encapsulated protocol:\n";
+			out += "Payload size: "+this.payload.length+"\n";
+			out += this.encapsulated.toString(this.indent+1)+"\n";
+			out += this.encapsulated.protocolName+"\n";
+		}
+		
+
+
 		out += "\n";
 		return out;
 	}

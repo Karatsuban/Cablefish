@@ -8,9 +8,10 @@ import java.util.HexFormat;
 
 class LinkLayer extends Protocol{
 
-	ByteUtil sourceAddr = null;
-	ByteUtil destinationAddr = null;
-	ByteUtil etherType = null;
+	private ByteUtil sourceAddr = null;
+	private ByteUtil destinationAddr = null;
+	private ByteUtil etherType = null;
+	private ByteUtil encap_data = null;
 
 	private boolean isLittleEndian;
 	private int tsf;
@@ -19,6 +20,7 @@ class LinkLayer extends Protocol{
 	private int opl;
 
 	private int offset; // 'cursor' to look in the data
+
 
 	public LinkLayer(boolean isLittleEndian, int tsf, int tss, int cpl, int opl, byte[] data){
 
@@ -39,20 +41,20 @@ class LinkLayer extends Protocol{
 	// FUNCTIONS
 
 	private void readData(){
-		sourceAddr = this.data.readBytes(6);
-		destinationAddr = this.data.readBytes(6);
-		etherType = this.data.readBytes(2);
-		data = this.data.getRemainingBytes();
+		this.sourceAddr = this.data.readBytes(6);
+		this.destinationAddr = this.data.readBytes(6);
+		this.etherType = this.data.readBytes(2);
+		this.encap_data = this.data.getRemainingBytes();
 
 
 		if (etherType.equals("0800")){
-				this.setEncapsulated(new IPv4(data));
+				this.setEncapsulated(new IPv4(this.encap_data));
 
 		}else if (etherType.equals("0806")){
-				this.setEncapsulated(new ARP(data));
+				this.setEncapsulated(new ARP(this.encap_data));
 
 		}else if (etherType.equals("86dd")){
-				this.setEncapsulated(new IPv6(data));
+				this.setEncapsulated(new IPv6(this.encap_data));
 
 		}else{
 				System.out.println("Don't know this protocol!");
@@ -74,6 +76,8 @@ class LinkLayer extends Protocol{
 		out += this.gs()+"Packet sent at date: "+formattedDate.toString()+"\n";
 		out += this.gs()+"Current Packet length: "+this.cpl+"\n";
 		out += this.gs()+"Original Packet length: "+this.opl+"\n";
+
+		out += this.gs()+"Remaining bytes length:" +this.encap_data.length()+"\n";
 
 		out += this.gs()+"Encapsulated protocol:\n";
 		out += this.encapsulated.toString(this.indent+1);

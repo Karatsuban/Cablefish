@@ -30,9 +30,24 @@ class Protocol{
 	}
 
     public String toString(){
-        String out = "It's "+this.protocolName;
+        String out = this.gs()+"It's "+this.protocolName;
         return out;
     }
 
-
+	public boolean hasProtocol(ProtocolName name){
+		// return true if the protocol itself has this name
+		// or if it encapsulates a protocol name like this
+		boolean out = false;
+		if (this.protocolName.equals(name.getName()) || name.equals(ProtocolName.ALL)){
+			out = true;
+		}
+		else{
+			if (this.encapsulated != null){
+				out = this.encapsulated.hasProtocol(name);
+			}else{
+				out = false;
+			}
+		}
+		return out;
+	}
 }

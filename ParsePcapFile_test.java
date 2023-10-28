@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.math.BigInteger;
 import java.nio.ByteBuffer;
-
+import java.util.ArrayList;
 
 class ParsePcapFile_test{
 
@@ -15,7 +15,8 @@ class ParsePcapFile_test{
 	boolean isLittleEndian;
 	int f;
 	int BCS;
-	LinkLayer[] packets = null;
+	ArrayList<LinkLayer> packets = new ArrayList<LinkLayer>();
+
 
 	public ParsePcapFile_test(String fileName){
 		this.fileName = fileName;
@@ -169,7 +170,6 @@ class ParsePcapFile_test{
 
 			if (timeStampFirst_arr != null){
 
-				System.out.println("Frame "+frameNb);
 
 				timeStampFirst = this.bytesToInt(timeStampFirst_arr); // read 32 bits
 				timeStampSecond = this.bytesToInt(this.readBytesFromFile(4)); // read 32 bits
@@ -185,10 +185,13 @@ class ParsePcapFile_test{
 											originalPacketLength, 
 											data);
 
+
+				this.packets.add(link);
+
 				// TODO : ne pas parser les data avec isLittleEndian !
 				// -> add an 'ignore' parameter to ignore this conversion in readBytes
 
-				System.out.println(link.toString(0));
+				//System.out.println(link.toString(0));
 				frameNb += 1;
 
 			}else{
@@ -199,5 +202,33 @@ class ParsePcapFile_test{
 		return ret_val;
 	}
 
+	public String toString(int frame, ProtocolName filter)
+	{
+		String out = "";
+		LinkLayer packet = null;
+		if(frame >= this.packets.size())
+		{
+			out = "Error: specified frame out of range";
+		}else{
+			if (frame < 0)
+			{	
+				for (int i=0; i<this.packets.size(); i++)
+				{
+					packet = this.packets.get(i);
+					if (packet.hasProtocol(filter)){
+						out += "Frame "+(i+1)+":\n";
+						out += packet.toString(0);
+					}
+				}
+			}else{
+				packet = this.packets.get(frame-1);
+				if (packet.hasProtocol(filter)){
+					out += "Frame "+frame+":\n";
+					out += packet.toString(0);
+				}
+			}
+		}
+		return out;
+	}
 
 }

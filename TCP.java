@@ -53,6 +53,7 @@ class TCP extends Protocol{
 
 		if (this.dataOffset > 20){
 			this.options = this.data.readBytes(this.dataOffset-20);
+			this.parseOption();
 		}
 
 
@@ -71,6 +72,47 @@ class TCP extends Protocol{
 		}
 
 	}
+
+
+	private void parseOption(){
+		short optionKind;
+		short optionLength = null;
+		ByteUtil optionData = null;
+
+		while (this.options.getRemainingLength() != 0){
+
+			optionKind = this.options.readBytes(1).toShort();
+			switch (optionKind){
+				case 0:
+					// End of options list
+					break;
+				case 1:
+					// No operations
+					break;
+				case 2:
+					// Maximum segment size
+					optionLength = this.options.readBytes(1).toShort();
+					break;
+				case 3:
+					// Window scale
+					optionLength = this.options.readBytes(1).toShort();
+					break;
+				case 4:
+					// Selective ack permitted
+					optionLength = this.options.readBytes(1).toShort();
+					break;
+				case 5:
+					// SACK
+					break;
+				case 8:
+					// Timestamp and echo or prev timestamp
+				default:
+			}
+
+		}
+
+	}
+
 
 	private String getFlagsRepr(){
 		String[] flags = {"FIN", "SYN", "RST", "PSH", "ACK", "URG", "ECE", "CWR"};

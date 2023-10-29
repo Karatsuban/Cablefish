@@ -10,6 +10,7 @@ public class CableFish
 
 	private int frame;
 	private ProtocolName filter;
+	private boolean followTCPStream;
 
 	public CableFish(String[] args){
 		//pcf = new ParseCaptureFile(fileName);
@@ -34,6 +35,7 @@ public class CableFish
 
 		this.frame = -1;
 		this.filter = ProtocolName.ALL;
+		this.followTCPStream = false;
 
 		while (argIndex < this.args.length)
 		{
@@ -52,6 +54,16 @@ public class CableFish
 					}
 					argIndex += 2;
 					break;
+				case "follow":
+					switch (this.args[argIndex+1]){
+						case "tcp-stream":
+							this.followTCPStream = true;
+							argIndex += 2;
+							break;
+						default:
+							argIndex += 1;
+					}
+					
 				default:
 					argIndex += 1;
 
@@ -66,6 +78,8 @@ public class CableFish
 		if (this.filter != null)
 			System.out.println("Getting protocol "+this.filter.getName());
 
+		if (this.followTCPStream)
+			System.out.println("Following TCP stream");
 
 		String out = this.pcf.toString(this.frame, this.filter);
 		System.out.println(out);

@@ -134,6 +134,11 @@ final class ByteUtil
 		return this.length;
 	}
 
+	public int getRemainingLength(){
+		// return the number of remaining bytes
+		return this.length-this.offset;
+	}
+
 	// ToString method
 
 	public String toString(){

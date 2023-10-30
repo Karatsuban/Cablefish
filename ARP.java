@@ -54,8 +54,12 @@ class ARP extends Protocol{
 		out += this.gs()+"Sender protocol address: "+this.senderProtocolAddress.asIPv4Addr()+"\n"; // HERE TODO : does this protocol address chages according to the protocol ? isn't IPv4 the only protocol used for this ?
 		out += this.gs()+"Target hardware address: "+this.targetHardwareAddress.asMacAddr()+"\n";
 		out += this.gs()+"Target protocol address: "+this.targetProtocolAddress.asIPv4Addr()+"\n";
-		if (this.payload.length != 0)
-			out += this.payload+"\n";
+
+		if (this.payload != null)
+		{
+			if (this.payload.length != 0)
+				out += this.payload+"\n";
+		}
 		out += "\n";
         return out;
     }

@@ -8,6 +8,7 @@ public enum ProtocolName{
 	TCP ("TCP"),
 	HTTPv1_1 ("HTTPv1_1"),
 	ICMP ("ICMP"),
+	NONE ("NONE"),
 	ALL ("ALL");
 
 	private String name;

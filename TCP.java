@@ -4,8 +4,8 @@ class TCP extends Protocol{
 
 	int sourcePort;
 	int destinationPort;
-	ByteUtil sequenceNumber = null;
-	ByteUtil ackNumber = null;
+	private long sequenceNumber;
+	private long ackNumber;
 	int dataOffset;
 	boolean cwr;
 	boolean ece;
@@ -29,12 +29,22 @@ class TCP extends Protocol{
 		this.parseData();
 	}
 
+	// GETTERS
+
+	public long getAckNumber(){
+		return this.ackNumber;
+	}
+
+	public long getSequenceNumber(){
+		return this.sequenceNumber;
+	}
+
 
 	private void parseData(){
 		this.sourcePort = this.data.readBytes(2).toInt();
 		this.destinationPort = this.data.readBytes(2).toInt();
-		this.sequenceNumber = this.data.readBytes(4);
-		this.ackNumber = this.data.readBytes(4);
+		this.sequenceNumber = this.data.readBytes(4).toLong();
+		this.ackNumber = this.data.readBytes(4).toLong();
 		byte temp = this.data.readBytes(1).getData()[0];
 		this.dataOffset = (temp >> 4) & 0x0F; // shift the 4 highest bits 4x to the right and get an int
 		this.dataOffset *= 4; // get the offset in BYTES
@@ -58,25 +68,34 @@ class TCP extends Protocol{
 
 
 		this.payload = this.data.getRemainingBytes();
-
-
-		if (this.destinationPort == 80 || this.destinationPort == 473 ||
-			this.sourcePort == 80 || this.sourcePort == 473)
-		{
-			if (this.payload.length != 0)
-			{
-				if (!this.payload.isZeroes()){
-					this.setEncapsulated(new HTTPv1_1(this.payload));
-				}
+		if (this.payload != null){
+			if (!this.payload.isZeroes()){
+				this.parsePayload();
 			}
 		}
 
+
+	}
+
+	private void parsePayload(){
+
+		ByteUtil firstBytes = this.payload.getBytes(5);
+
+		//System.out.println("#"+firstBytes.toAlphaNum()+"#");
+
+		switch (firstBytes.toAlphaNum()){
+			case "GET /":
+			case "HTTP/":
+				//System.out.println("THIS IS HTTP");
+				this.setEncapsulated(new HTTPv1_1(this.payload));
+			default:
+		}
 	}
 
 
 	private void parseOption(){
 		short optionKind;
-		short optionLength = null;
+		short optionLength;
 		ByteUtil optionData = null;
 
 		while (this.options.getRemainingLength() != 0){
@@ -132,8 +151,8 @@ class TCP extends Protocol{
 		
 		out += this.gs()+"Source port: "+this.sourcePort+"\n";
 		out += this.gs()+"Destination port: "+this.destinationPort+"\n";
-		out += this.gs()+"Sequence number: "+this.sequenceNumber.toLong()+"\n";
-		out += this.gs()+"Ack number: "+this.ackNumber.toLong()+"\n";
+		out += this.gs()+"Sequence number: "+this.sequenceNumber+"\n";
+		out += this.gs()+"Ack number: "+this.ackNumber+"\n";
 		out += this.gs()+"Data offset: "+this.dataOffset+"\n";
 		out += this.gs()+"Flags: "+this.flags+" "+this.getFlagsRepr()+"\n";
 		out += this.gs()+"Window: "+this.windowSize.toLong()+"\n";
@@ -149,9 +168,7 @@ class TCP extends Protocol{
 		if (this.encapsulated != null)
 		{
 			out += this.gs()+"Encapsulated protocol:\n";
-			out += "Payload size: "+this.payload.length+"\n";
 			out += this.encapsulated.toString(this.indent+1)+"\n";
-			out += this.encapsulated.protocolName+"\n";
 		}
 		
 

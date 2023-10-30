@@ -191,7 +191,6 @@ class ParsePcapFile_test{
 				// TODO : ne pas parser les data avec isLittleEndian !
 				// -> add an 'ignore' parameter to ignore this conversion in readBytes
 
-				//System.out.println(link.toString(0));
 				frameNb += 1;
 
 			}else{
@@ -202,18 +201,69 @@ class ParsePcapFile_test{
 		return ret_val;
 	}
 
+
+
+	public ArrayList<LinkLayer> getProtocolPackets(ProtocolName name){
+		// return all the packets with the name
+		ArrayList<LinkLayer> retPackets = new ArrayList<LinkLayer>();
+		for (LinkLayer packet: this.packets){
+			if (packet.hasProtocol(name)){
+				retPackets.add(packet);
+			}
+		}
+		return retPackets;
+	}
+
+
+
+	public void followStream(ProtocolName name){
+		System.out.println("Following "+name.getName()+"\n");
+
+		switch (name){
+			case ProtocolName.TCP:
+				ArrayList<LinkLayer> TCPPackets = this.getProtocolPackets(name);
+				if(TCPPackets.size() == 0){
+					System.out.println("No '"+name.getName()+"' packet found!");
+					break;
+				}
+				String tcpStream = ""; // content of the exchange
+				TCP temp = (TCP)TCPPackets.get(0).getProtocol(name); // sender
+				int dest_port = temp.getDestPort();
+				int sender_port = temp.getSrcPort();
+				long seq_nb = temp.getSequenceNumber();
+				long ack_nb = temp.getAckNumber(); // should be 0
+
+				System.out.println(seq_nb + " " + ack_nb);
+
+				int tcp_count = 0;
+				for (LinkLayer packet: TCPPackets){
+					System.out.println(packet.getProtocol(name).toString(0));
+					// verify that the packet if from the sender OR the receiver
+					// verify the seq_nb and ack_nb match expected
+					// check the flags
+					// if PUSH is set : get the data
+				}
+				break;
+			default:
+				System.out.println("Cannot follow '"+name.getName()+"' stream!");
+		}
+
+
+	}
+
+
+
 	public String toString(int frame, ProtocolName filter)
 	{
+		// Display only the specified frame if frame > 0 else all
+		// Display only the specified protocol if filter != ProtocolName.ALL
 		String out = "";
 		LinkLayer packet = null;
-		if(frame >= this.packets.size())
-		{
+		if(frame >= this.packets.size()) {
 			out = "Error: specified frame out of range";
 		}else{
-			if (frame < 0)
-			{	
-				for (int i=0; i<this.packets.size(); i++)
-				{
+			if (frame < 0) {
+				for (int i=0; i<this.packets.size(); i++){
 					packet = this.packets.get(i);
 					if (packet.hasProtocol(filter)){
 						out += "Frame "+(i+1)+":\n";

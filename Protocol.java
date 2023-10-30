@@ -20,6 +20,24 @@ class Protocol{
 		this.encapsulated = encapsulated;
 	}
 
+	protected Protocol getProtocol(ProtocolName name){
+		// return itsels if it matches name
+		// else recursively calls this method on its encapsulated
+		// return null if it has no encapsulated protocol
+		Protocol prot;
+		if (this.protocolName.equals(name.getName())){
+			prot = this;
+		}else{
+			if (this.encapsulated == null)
+				prot = null;
+			else
+				prot = this.encapsulated.getProtocol(name);
+		}
+
+		return prot;
+	}
+
+
 	public String toString(int indent){
 		this.indent = indent;
 		return this.toString();

@@ -36,6 +36,7 @@ public class CableFish
 		this.frame = -1;
 		this.filter = ProtocolName.ALL;
 		this.followName = ProtocolName.NONE;
+		boolean showOutput = true;
 
 		while (argIndex < this.args.length)
 		{
@@ -63,7 +64,11 @@ public class CableFish
 						default:
 							argIndex += 1;
 					}
-					
+				case "no-output":
+					showOutput = false;
+					argIndex += 1;
+					break;
+
 				default:
 					argIndex += 1;
 
@@ -80,7 +85,9 @@ public class CableFish
 
 		
 		String out = this.pcf.toString(this.frame, this.filter);
-		//System.out.println(out);
+
+		if (showOutput)
+			System.out.println(out);
 
 
 		if (this.followName != ProtocolName.NONE){

@@ -39,6 +39,16 @@ class TCP extends Protocol{
 		return this.sequenceNumber;
 	}
 
+	public int getDestPort(){
+		return this.destinationPort;
+	}
+
+	public int getSrcPort(){
+		return this.sourcePort;
+	}
+
+
+	// PARSER
 
 	private void parseData(){
 		this.sourcePort = this.data.readBytes(2).toInt();

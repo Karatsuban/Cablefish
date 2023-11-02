@@ -112,6 +112,10 @@ final class ByteUtil
         return new ByteUtil(b);
     }
 
+	public void reset(){
+		// move offset back to 0
+		this.offset = 0;
+	}
 
 	// Getters
 

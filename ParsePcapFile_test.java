@@ -215,37 +215,41 @@ class ParsePcapFile_test{
 	}
 
 
+	private void followTCPStream(){
+		ProtocolName prot = ProtocolName.TCP;
+		ArrayList<LinkLayer> TCPPackets = this.getProtocolPackets(prot);
+		if(TCPPackets.size() == 0){
+			System.out.println("No '"+prot.getName()+"' packet found!");
+			return;
+		}
+		String tcpStream = ""; // content of the exchange
+		TCP temp = (TCP)TCPPackets.get(0).getProtocol(prot); // sender
+		int dest_port = temp.getDestPort();
+		int sender_port = temp.getSrcPort();
+		long seq_nb = temp.getSequenceNumber();
+		long ack_nb = temp.getAckNumber(); // should be 0
 
-	public void followStream(ProtocolName name){
-		System.out.println("Following "+name.getName()+"\n");
+		System.out.println(seq_nb + " " + ack_nb);
 
-		switch (name){
-			case ProtocolName.TCP:
-				ArrayList<LinkLayer> TCPPackets = this.getProtocolPackets(name);
-				if(TCPPackets.size() == 0){
-					System.out.println("No '"+name.getName()+"' packet found!");
-					break;
-				}
-				String tcpStream = ""; // content of the exchange
-				TCP temp = (TCP)TCPPackets.get(0).getProtocol(name); // sender
-				int dest_port = temp.getDestPort();
-				int sender_port = temp.getSrcPort();
-				long seq_nb = temp.getSequenceNumber();
-				long ack_nb = temp.getAckNumber(); // should be 0
+		int tcp_count = 0;
+		for (LinkLayer packet: TCPPackets){
+			System.out.println(packet.getProtocol(prot).toString(0));
+			// verify that the packet if from the sender OR the receiver
+			// verify the seq_nb and ack_nb match expected
+			// check the flags
+			// if PUSH is set : get the data
+		}
+	}
 
-				System.out.println(seq_nb + " " + ack_nb);
 
-				int tcp_count = 0;
-				for (LinkLayer packet: TCPPackets){
-					System.out.println(packet.getProtocol(name).toString(0));
-					// verify that the packet if from the sender OR the receiver
-					// verify the seq_nb and ack_nb match expected
-					// check the flags
-					// if PUSH is set : get the data
-				}
+	public void followStream(ProtocolName prot){
+		System.out.println("Following "+prot.getName()+"\n");
+		switch (prot){
+			case TCP:
+				this.followTCPStream();
 				break;
 			default:
-				System.out.println("Cannot follow '"+name.getName()+"' stream!");
+				System.out.println("Cannot follow '"+prot.getName()+"' stream!");
 		}
 
 

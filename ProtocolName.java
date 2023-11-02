@@ -8,10 +8,11 @@ public enum ProtocolName{
 	TCP ("TCP"),
 	HTTPv1_1 ("HTTPv1_1"),
 	ICMP ("ICMP"),
+	DHCP ("DHCP"),
 	NONE ("NONE"),
 	ALL ("ALL");
 
-	private String name;
+	private final String name;
 
 	ProtocolName(String name){
 		this.name = name;
@@ -38,7 +39,7 @@ public enum ProtocolName{
 
 	}
 
-	public String getName(){
+	public final String getName(){
 		return this.name;
 	}
 

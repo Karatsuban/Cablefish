@@ -47,13 +47,13 @@ class LinkLayer extends Protocol{
 		this.encap_data = this.data.getRemainingBytes();
 
 
-		if (etherType.equals("0800")){
+		if (this.etherType.equals("0800")){
 				this.setEncapsulated(new IPv4(this.encap_data));
 
-		}else if (etherType.equals("0806")){
+		}else if (this.etherType.equals("0806")){
 				this.setEncapsulated(new ARP(this.encap_data));
 
-		}else if (etherType.equals("86dd")){
+		}else if (this.etherType.equals("86dd")){
 				this.setEncapsulated(new IPv6(this.encap_data));
 
 		}else{
@@ -79,8 +79,10 @@ class LinkLayer extends Protocol{
 
 		out += this.gs()+"Remaining bytes length:" +this.encap_data.length()+"\n";
 
-		out += this.gs()+"Encapsulated protocol:\n";
-		out += this.encapsulated.toString(this.indent+1);
+		if (this.encapsulated != null){
+			out += this.gs()+"Encapsulated protocol:\n";
+			out += this.encapsulated.toString(this.indent+1);
+		}
 		out += "\n";
 
 		return out;

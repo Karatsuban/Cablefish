@@ -47,7 +47,7 @@ class UDP extends Protocol{
 
 		if (this.encapsulated != null){
 			out += this.gs()+"Encapsulated protocol:\n";
-			out += this.gs()+this.encapsulated.toString(this.indent+1);
+			out += this.encapsulated.toString(this.indent+1);
 		}
 		out += "\n";
 		return out;

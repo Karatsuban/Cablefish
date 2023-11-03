@@ -5,7 +5,6 @@ class DHCP extends Protocol{
 	private short htype;
 	private short hlen;
 	private short hops;
-	private long XID; // TODO delete, useless, fixed !
 	private int secs;
 	private int flags;
 	private long ciaddr;
@@ -49,6 +48,7 @@ class DHCP extends Protocol{
 
 	public String toString(){
 		String out = "";
+		out += this.gs()+this.protocolName+"\n";
 		out += this.gs()+"OP: "+this.op+"\n";
 		out += this.gs()+"Htype: "+this.htype+"\n";
 		out += this.gs()+"Hlen: "+this.hlen+"\n";
@@ -56,8 +56,9 @@ class DHCP extends Protocol{
 		out += this.gs()+"Secs: "+this.secs+"\n";
 		out += this.gs()+"Flags: "+this.flags+"\n";
 		out += this.gs()+"COOKIE: "+this.cookie+"\n";
-		out += this.gs()+"Remaining: ("+this.remaining.length+")"+this.remaining+"\n";
-		out += this.gs()+this.protocolName+"\n";
+		if (this.remaining != null){
+			out += this.gs()+"There are options ("+this.remaining.length+" bytes)\n";
+		}
 
 		return out;
 	}

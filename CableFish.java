@@ -51,7 +51,7 @@ public class CableFish
 					if (ProtocolName.isName(temp)){
 						this.filter = ProtocolName.getFromString(temp);
 					}else{
-						System.out.println("Protocol name not recognized: "+temp);
+						System.out.println("Protocol name not recognized: '"+temp+"'");
 					}
 					argIndex += 2;
 					break;

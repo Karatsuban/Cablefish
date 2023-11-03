@@ -1,8 +1,0 @@
-
-
-class NetworkLayer{
-
-	public NetworkLayer(){
-	}
-
-}

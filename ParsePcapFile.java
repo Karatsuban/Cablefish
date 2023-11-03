@@ -7,7 +7,7 @@ import java.math.BigInteger;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
 
-class ParsePcapFile_test{
+class ParsePcapFile{
 
 	String fileName = null;
 	File file = null;
@@ -15,10 +15,10 @@ class ParsePcapFile_test{
 	boolean isLittleEndian;
 	int f;
 	int BCS;
-	ArrayList<LinkLayer> packets = new ArrayList<LinkLayer>();
+	ArrayList<Frame> packets = new ArrayList<Frame>();
 
 
-	public ParsePcapFile_test(String fileName){
+	public ParsePcapFile(String fileName){
 		this.fileName = fileName;
 		
 
@@ -178,18 +178,16 @@ class ParsePcapFile_test{
 	
 				data = this.readBytesFromFile(capturedPacketLength, false); // read capturedPacketLength bytes
 
-				LinkLayer link = new LinkLayer(this.isLittleEndian,
+				Frame link = new Frame(this.isLittleEndian,
 											timeStampFirst, 
 											timeStampSecond,
 											capturedPacketLength,
 											originalPacketLength, 
-											data);
+											data,
+											frameNb);
 
 
 				this.packets.add(link);
-
-				// TODO : ne pas parser les data avec isLittleEndian !
-				// -> add an 'ignore' parameter to ignore this conversion in readBytes
 
 				frameNb += 1;
 
@@ -203,10 +201,10 @@ class ParsePcapFile_test{
 
 
 
-	public ArrayList<LinkLayer> getProtocolPackets(ProtocolName name){
+	public ArrayList<Frame> getProtocolPackets(ProtocolName name){
 		// return all the packets with the name
-		ArrayList<LinkLayer> retPackets = new ArrayList<LinkLayer>();
-		for (LinkLayer packet: this.packets){
+		ArrayList<Frame> retPackets = new ArrayList<Frame>();
+		for (Frame packet: this.packets){
 			if (packet.hasProtocol(name)){
 				retPackets.add(packet);
 			}
@@ -217,7 +215,7 @@ class ParsePcapFile_test{
 
 	private void followTCPStream(){
 		ProtocolName prot = ProtocolName.TCP;
-		ArrayList<LinkLayer> TCPPackets = this.getProtocolPackets(prot);
+		ArrayList<Frame> TCPPackets = this.getProtocolPackets(prot);
 		if(TCPPackets.size() == 0){
 			System.out.println("No '"+prot.getName()+"' packet found!");
 			return;
@@ -232,7 +230,7 @@ class ParsePcapFile_test{
 		System.out.println(seq_nb + " " + ack_nb);
 
 		int tcp_count = 0;
-		for (LinkLayer packet: TCPPackets){
+		for (Frame packet: TCPPackets){
 			System.out.println(packet.getProtocol(prot).toString(0));
 			// verify that the packet if from the sender OR the receiver
 			// verify the seq_nb and ack_nb match expected
@@ -262,7 +260,7 @@ class ParsePcapFile_test{
 		// Display only the specified frame if frame > 0 else all
 		// Display only the specified protocol if filter != ProtocolName.ALL
 		String out = "";
-		LinkLayer packet = null;
+		Frame packet = null;
 		if(frame >= this.packets.size()) {
 			out = "Error: specified frame out of range";
 		}else{

@@ -4,8 +4,7 @@ import java.io.*;
 public class CableFish
 {
 
-	//ParseCaptureFile pcf = null;
-	ParsePcapFile_test pcf = null;
+	ParsePcapFile pcf = null;
 	String[] args = null;
 
 	private int frame;
@@ -17,7 +16,7 @@ public class CableFish
 
 		this.args = args;
 
-		pcf = new ParsePcapFile_test(this.args[0]);
+		pcf = new ParsePcapFile(this.args[0]);
 
 		this.parseArgs();
 	}	

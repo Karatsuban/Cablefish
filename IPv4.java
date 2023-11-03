@@ -9,7 +9,7 @@ class IPv4 extends Protocol{
 	private ByteUtil fragmentOffset;
 	private boolean dontFragment;
 	private boolean moreFragments;
-	private ByteUtil ttl = null;
+	private short ttl;
 	private ByteUtil protocol = null;
 	private ByteUtil headerChecksum = null;
 	private ByteUtil sourceIPAddr = null;
@@ -41,7 +41,7 @@ class IPv4 extends Protocol{
 		this.dontFragment = flagsFragmentOffset.getBit(6) == 1;
 		this.moreFragments = flagsFragmentOffset.getBit(5) == 1;
 		this.fragmentOffset = null; // TODO : calculate it properly !
-		this.ttl = this.data.readBytes(1);
+		this.ttl = this.data.readBytes(1).toShort();
 		this.protocol = this.data.readBytes(1);
 		this.headerChecksum = this.data.readBytes(2);
 		this.sourceIPAddr = this.data.readBytes(4);
@@ -71,14 +71,14 @@ class IPv4 extends Protocol{
 	public String toString(){
 		String out = "";
 		out += this.gs()+this.protocolName+"\n";
-		out += this.gs()+"Internet Header Lenghth : "+this.IHL+"\n";
 		out += this.gs()+"Flags: ";
 		if (this.dontFragment)
 			out += "Don't fragment\n";
 		if (this.moreFragments)
 			out += "More fragments\n";
-		out += this.gs()+"TTL: "+this.ttl.toShort()+"\n";
-		out += this.gs()+"Protocol: "+this.protocol+"\n";
+		if (!this.dontFragment && !this.moreFragments)
+			out += "(No flags)\n";
+		out += this.gs()+"TTL: "+this.ttl+"\n";
 		out += this.gs()+"Source IP address: "+this.sourceIPAddr.asIPv4Addr()+"\n";
 		out += this.gs()+"Destination IP address: "+this.destinationIPAddr.asIPv4Addr()+"\n";
 

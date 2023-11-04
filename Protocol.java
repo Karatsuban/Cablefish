@@ -39,15 +39,20 @@ class Protocol{
 
 
 	public String toString(int indent){
+		// set the indent of this protocol
 		this.indent = indent;
 		return this.toString();
 	}
 
 	protected String gs(){
+		// return the correct indent
 		return "  ".repeat(this.indent);
 	}
 
     public String toString(){
+		// simple method returning a String containing all of the protocol's
+		// relevant data, including its encapsulated protocol
+		// should be overrided
         String out = this.gs()+"It's "+this.protocolName;
         return out;
     }

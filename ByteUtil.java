@@ -143,6 +143,11 @@ final class ByteUtil
 		return this.length-this.offset;
 	}
 
+	public Boolean hasRemainingBytes(){
+		// returns true if there are remaining bytes to read
+		return this.getRemainingLength() > 0;
+	}
+
 	// ToString method
 
 	public String toString(){

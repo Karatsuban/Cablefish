@@ -1,11 +1,11 @@
 TODO
 
+- add an ethernet java class and pretty much paste the content of Frame into it
 -Use the ByteUtil class in the ParseCaptureFile.java to remove any duplicate functions
 -add the parameters from the user (follow TCP stream, ...)
 -Make a package
 -Separate the protocols from the other files (in another folder)
 -modify the methods in ByteUtil to operate on the current value at the offset
--get rid of the padding (if any) at any layer that specifies it
 
 
 
@@ -29,3 +29,4 @@ DONE
 -Create a ProtocolName enum class to keep track of all the protocols
 -Add the parameter 'frame' to keep only one frame
 -Add the parameter 'filter' to keep only one protocol
+-get rid of the padding (if any) at any layer that specifies it

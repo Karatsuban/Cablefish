@@ -24,14 +24,18 @@ class UDP extends Protocol{
 		if (this.length-2 > 0){
 			this.payload = this.data.getRemainingBytes();
 
+			// testing if it's encapsulating DHCP
 			if (this.payload.length >= 240){
 				this.payload.skipBytes(236);
+				// check whether the payload contains DHCP's magic cookie
 				boolean isDHCP = this.payload.getBytes(4).equals("63825363");
 				this.payload.reset();
 				if (isDHCP){
+					// settint DHCP as the encapsulated protocol
 					this.setEncapsulated(new DHCP(this.payload));
 				}
 			}
+
 		}
 	}
 

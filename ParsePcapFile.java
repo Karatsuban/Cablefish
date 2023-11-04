@@ -268,14 +268,12 @@ class ParsePcapFile{
 				for (int i=0; i<this.packets.size(); i++){
 					packet = this.packets.get(i);
 					if (packet.hasProtocol(filter)){
-						out += "Frame "+(i+1)+":\n";
 						out += packet.toString(0);
 					}
 				}
 			}else{
 				packet = this.packets.get(frame-1);
 				if (packet.hasProtocol(filter)){
-					out += "Frame "+frame+":\n";
 					out += packet.toString(0);
 				}
 			}

@@ -6,8 +6,9 @@ import java.util.HexFormat;
 
 
 
-class LinkLayer extends Protocol{
+class Frame extends Protocol{
 
+	private int frameNb;
 	private ByteUtil sourceAddr = null;
 	private ByteUtil destinationAddr = null;
 	private ByteUtil etherType = null;
@@ -22,7 +23,7 @@ class LinkLayer extends Protocol{
 	private int offset; // 'cursor' to look in the data
 
 
-	public LinkLayer(boolean isLittleEndian, int tsf, int tss, int cpl, int opl, byte[] data){
+	public Frame(boolean isLittleEndian, int tsf, int tss, int cpl, int opl, byte[] data, int nb){
 
 		super("Ethernet", data);
 
@@ -32,15 +33,16 @@ class LinkLayer extends Protocol{
 		this.cpl = cpl;
 		this.opl = opl;
 		this.offset = 0;
+		this.frameNb = nb;
 
-		this.readData();
+		this.parseData();
 
 
 	}
 
 	// FUNCTIONS
 
-	private void readData(){
+	private void parseData(){
 		this.sourceAddr = this.data.readBytes(6);
 		this.destinationAddr = this.data.readBytes(6);
 		this.etherType = this.data.readBytes(2);
@@ -57,7 +59,7 @@ class LinkLayer extends Protocol{
 				this.setEncapsulated(new IPv6(this.encap_data));
 
 		}else{
-				System.out.println("Don't know this protocol!");
+				System.out.println("Unimplemented protocol "+this.etherType);
 		}	
 
 	}
@@ -70,14 +72,11 @@ class LinkLayer extends Protocol{
 		SimpleDateFormat sdf = new SimpleDateFormat("EEEE,MMMM d,yyyy h:mm,a");
 		String formattedDate = sdf.format(date);
 
-		out += this.gs()+"destination address: "+this.sourceAddr.asMacAddr()+"\n";
-		out += this.gs()+"source address: "+this.destinationAddr.asMacAddr()+"\n";
-		out += this.gs()+"etherType: "+this.etherType.toInt()+"\n";
+		out += this.gs()+"Frame "+this.frameNb+":\n";
+		out += this.gs()+"Dest address: "+this.sourceAddr.asMacAddr()+"\n";
+		out += this.gs()+"Src address: "+this.destinationAddr.asMacAddr()+"\n";
 		out += this.gs()+"Packet sent at date: "+formattedDate.toString()+"\n";
-		out += this.gs()+"Current Packet length: "+this.cpl+"\n";
-		out += this.gs()+"Original Packet length: "+this.opl+"\n";
-
-		out += this.gs()+"Remaining bytes length:" +this.encap_data.length()+"\n";
+		out += this.gs()+"Packet length: "+this.cpl+"\n";
 
 		if (this.encapsulated != null){
 			out += this.gs()+"Encapsulated protocol:\n";

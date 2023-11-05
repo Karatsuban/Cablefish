@@ -13,7 +13,7 @@ class IPv6 extends Protocol{
     public String toString(){
         String out = "";
         out += this.gs()+this.protocolName+"\n";
-        out += this.gs()+data;
+        out += this.gs()+"Len payload: "+data.length;
         return out;
     }
 	

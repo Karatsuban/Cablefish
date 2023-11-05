@@ -178,13 +178,7 @@ class ParsePcapFile{
 	
 				data = this.readBytesFromFile(capturedPacketLength, false); // read capturedPacketLength bytes
 
-				Frame link = new Frame(this.isLittleEndian,
-											timeStampFirst, 
-											timeStampSecond,
-											capturedPacketLength,
-											originalPacketLength, 
-											data,
-											frameNb);
+				Frame link = new Frame(frameNb, timeStampFirst,	capturedPacketLength, data);
 
 
 				this.packets.add(link);

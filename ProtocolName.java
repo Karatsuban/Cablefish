@@ -9,6 +9,7 @@ public enum ProtocolName{
 	HTTPv1_1 ("HTTPv1_1"),
 	ICMP ("ICMP"),
 	DHCP ("DHCP"),
+	DNS ("DNS"),
 	NONE ("NONE"),
 	ALL ("ALL");
 

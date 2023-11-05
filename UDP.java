@@ -33,8 +33,39 @@ class UDP extends Protocol{
 				if (isDHCP){
 					// settint DHCP as the encapsulated protocol
 					this.setEncapsulated(new DHCP(this.payload));
+					return;
 				}
 			}
+
+
+			// testing if it's encapsulating DNS
+			int dns_count = 0;
+			if (this.destPort == 53 || this.sourcePort == 53){
+				dns_count += 1;
+			}
+			if (this.payload.length >= 12){ // at least 12 bytes long (DNS header length)
+				this.payload.skipBytes(2); // would skip 'id'
+				int qr = this.payload.readBytes(1).getBit(7);
+				this.payload.skipBytes(1); // would skip the last head byte
+				ByteUtil qdcount = this.payload.readBytes(2); // would read qdcount
+				if (qdcount.equals("0001")){
+					dns_count += 10;
+				}
+				ByteUtil ancount = this.payload.readBytes(2); // would read ancount
+				ByteUtil nscount = this.payload.readBytes(2); // would read arcount
+
+				if (qr == 0 || ancount.isZeroes() || nscount.isZeroes()){
+					dns_count += 1;
+				}
+				
+				this.payload.reset();
+
+				if (dns_count >= 10){
+					this.setEncapsulated(new DNS(this.payload));
+					return;
+				}
+			}
+			
 
 		}
 	}

@@ -10,6 +10,8 @@ public enum ProtocolName{
 	ICMP ("ICMP"),
 	DHCP ("DHCP"),
 	DNS ("DNS"),
+	ETHERNET ("ETHERNET"),
+	FRAME ("FRAME"),
 	NONE ("NONE"),
 	ALL ("ALL");
 

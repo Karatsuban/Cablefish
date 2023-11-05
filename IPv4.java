@@ -38,8 +38,8 @@ class IPv4 extends Protocol{
 		ByteUtil totalLength = this.data.readBytes(2); // total packet length (header+data)
 		ByteUtil identification = this.data.readBytes(2);
 		ByteUtil flagsFragmentOffset = this.data.readBytes(2); // Flags + fragment offset
-		this.dontFragment = flagsFragmentOffset.getBit(6) == 1;
-		this.moreFragments = flagsFragmentOffset.getBit(5) == 1;
+		this.dontFragment = flagsFragmentOffset.getBit(1) == 1;
+		this.moreFragments = flagsFragmentOffset.getBit(2) == 1;
 		this.fragmentOffset = null; // TODO : calculate it properly !
 		this.ttl = this.data.readBytes(1).toShort();
 		this.protocol = this.data.readBytes(1);

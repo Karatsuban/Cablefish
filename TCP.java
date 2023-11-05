@@ -59,14 +59,14 @@ class TCP extends Protocol{
 		this.dataOffset = (temp >> 4) & 0x0F; // shift the 4 highest bits 4x to the right and get an int
 		this.dataOffset *= 4; // get the offset in BYTES
 		this.flags = this.data.readBytes(1);
-		cwr = this.flags.getBit(7) == 1;
-		ece = this.flags.getBit(6) == 1;
-		urg = this.flags.getBit(5) == 1;
-		ack = this.flags.getBit(4) == 1;
-		psh = this.flags.getBit(3) == 1;
-		rst = this.flags.getBit(2) == 1;
-		syn = this.flags.getBit(1) == 1;
-		fin = this.flags.getBit(0) == 1;
+		cwr = this.flags.getBit(0) == 1;
+		ece = this.flags.getBit(1) == 1;
+		urg = this.flags.getBit(2) == 1;
+		ack = this.flags.getBit(3) == 1;
+		psh = this.flags.getBit(4) == 1;
+		rst = this.flags.getBit(5) == 1;
+		syn = this.flags.getBit(6) == 1;
+		fin = this.flags.getBit(7) == 1;
 		this.windowSize = this.data.readBytes(2);
 		this.checksum = this.data.readBytes(2);
 		this.urgentPointer = this.data.readBytes(2);
@@ -144,9 +144,9 @@ class TCP extends Protocol{
 
 
 	private String getFlagsRepr(){
-		String[] flags = {"FIN", "SYN", "RST", "PSH", "ACK", "URG", "ECE", "CWR"};
+		String[] flags = {"CWR", "ECE", "URG", "ACK", "PSH", "RST", "FIN"};
 		String out = "(";
-		for (int i=7; i>=0; i--){
+		for (int i=0; i<7; i++){
 			if (this.flags.getBit(i) == 1)
 				out += flags[i]+" ";
 		}

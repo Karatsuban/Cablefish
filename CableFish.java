@@ -39,14 +39,16 @@ public class CableFish
 
 		while (argIndex < this.args.length)
 		{
+
 			switch (this.args[argIndex])
 			{
 				case "frame":
 					this.frame = Integer.valueOf(this.args[argIndex+1]);
 					argIndex += 2;
 					break;
+
 				case "filter":
-					String temp =this.args[argIndex+1];
+					String temp = this.args[argIndex+1];
 					if (ProtocolName.isName(temp)){
 						this.filter = ProtocolName.getFromString(temp);
 					}else{
@@ -54,6 +56,7 @@ public class CableFish
 					}
 					argIndex += 2;
 					break;
+
 				case "follow-stream":
 					switch (this.args[argIndex+1]){
 						case "tcp":
@@ -63,6 +66,8 @@ public class CableFish
 						default:
 							argIndex += 1;
 					}
+					break;
+
 				case "no-output":
 					showOutput = false;
 					argIndex += 1;
@@ -81,6 +86,8 @@ public class CableFish
 
 		if (this.filter != null)
 			System.out.println("Getting protocol "+this.filter.getName());
+		else
+			System.out.println("No filter!");
 
 		
 		String out = this.pcf.toString(this.frame, this.filter);

@@ -20,6 +20,10 @@ final class ByteUtil
 		this(new byte[]{data});
 	}
 
+	public ByteUtil(int data){
+		this((byte)data);
+	}
+
 	// Conversion methods
 
 	public long toLong(){
@@ -125,14 +129,49 @@ final class ByteUtil
 
 	public int getBit(int n){
 		// return the nth bit from the first byte currently being read
+		// treated as if the bits are indexed like this : 0 1 2 3 4 5 6 7
 		int out = 0;
 		if (n>=8 || n < 0){
 			out = -1;
 		}else{
-			out = (this.data[this.offset] >> n) & 1;
+			out = (this.data[this.offset] >> (7-n)) & 1;
 		}
 		return out;
 	}
+
+	public int getBitsFromTo(int start, int stop){
+		// return the bits between start and stop INCLUDED from the bytes being currently read
+		// treated as if the bits are indexed like this : 0 1 2 3 4 5 6 7
+		int out = 0;
+		if (start < 0 || start > 7 || start >= stop){
+			out = -1; // error
+		}else{
+			int val = this.data[this.offset] << start; // remove the bits before start
+			val = val >> (start + (7-stop)); // remove the bits after stop
+		}
+		return out;
+	}
+
+	public int getIndexNext(byte b){
+		// returns the index (relative to offset) of the next occurence of b in data
+		int id = 0;
+		boolean isFound = false;
+		int foundId = -1;
+		while (this.offset+id < this.length-1 && !isFound){
+			if (this.data[this.offset+id] == b){
+				isFound = true;
+				foundId = id;
+			}
+			id += 1;
+		}
+		return foundId;
+	}
+
+	public int getIndexNext(CharSequence b){
+		// returns the index (relative to offset) of the next occurence of the FIRST CHAR of b in data
+		return this.getIndexNext(HexFormat.of().parseHex(b)[0]);
+	}
+
 
 	public int length(){
 		return this.length;
@@ -162,13 +201,24 @@ final class ByteUtil
 		return new String(this.data);
 	}
 
+	public String toURL(){
+		String url = "";
+		for (int i=0; i<this.data.length; i++){
+			if (this.data[i] > 16)
+				url += new String(new byte[]{this.data[i]});
+			else if (this.data[i] == 2)
+				url += ".";
+		}
+		return url;
+	}
+
 	public String asIPv4Addr(){
 		String out = "";
 		if (this.data.length < 4){
 			out += " ";
 		}else{
 			for (int i=0; i<4; i++){
-				out += this.data[i] & 0xF; // from byte to int
+				out += Integer.toString(Byte.toUnsignedInt(this.data[i]));
 				if (i != 3) out += ".";
 			}
 		}
